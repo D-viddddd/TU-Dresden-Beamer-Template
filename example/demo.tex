@@ -1,0 +1,170 @@
+\documentclass[aspectratio=169, xcolor=table]{beamer}
+
+% Theme (header progress can be disabled: [headprogress=false])
+\usepackage[headprogress=true]{beamerthemeTUDneo}
+
+% Math, tables, figures, code, algorithms
+\usepackage{amsmath, amssymb, mathtools, bm}
+\usepackage{booktabs, array}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Bibliography (biber)
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\addbibresource{../ref/refs.bib}
+
+% Listings style (simple, neutral)
+\lstset{
+  basicstyle=\ttfamily\small,
+  frame=single,
+  breaklines=true,
+  numbers=none,
+  keywordstyle=\color{TUDgray}\bfseries,
+  commentstyle=\color{TUDgray},
+  rulecolor=\color{black}
+}
+
+% Show a compact Outline at each (sub)section start
+\AtBeginSection{
+  \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[currentsection,hideallsubsections]
+  \end{frame}
+}
+\AtBeginSubsection{
+  \begin{frame}
+    \frametitle{Outline}
+    \tableofcontents[currentsubsection]
+  \end{frame}
+}
+
+% Title info
+\title[TUD Neo Demo]{TUD Neo — Modern White Theme}
+\subtitle{Clean footline, geometric accent}
+\author[Sihao Wei]{Sihao Wei}
+\institute[Faculty of Transportation and Traffic Sciences]{Faculty of Transportation and Traffic Sciences}
+\date{\today}
+
+\begin{document}
+
+% Title frame (white center, centered logo)
+\begin{frame}[plain]
+  \vspace*{1.2cm}
+  \centering
+  {\usebeamerfont{title}\usebeamercolor[fg]{structure}\LARGE \inserttitle\par}
+  \vspace{0.4cm}
+  {\normalsize \insertsubtitle\par}
+  \vspace{0.8cm}
+  {\large \insertauthor\par}
+  {\small \insertinstitute\par}
+  \vspace{0.6cm}
+  {\small \insertdate\par}
+  \vspace{0.8cm}
+  % Place your SVG at assets/Logo_TU_Dresden_2025.svg (or PDF/PNG/JPG)
+  \TUDCenteredLogo[0.16\paperwidth]{../assets/Logo_TU_Dresden_2025}
+\end{frame}
+
+% ---------------- Outline ----------------
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Bullets \& Math}
+\subsection{Inline and Display}
+
+\begin{frame}{Bullets \& Math}
+  \textbf{Item:} Clean white background with TU blue accents inspired by TU Dresden's visual identity~\cite{dantzig1951}.\\
+  \textbf{Note:} Readable footline; total pages + pages left in the header~\cite{berge1963}.
+
+  \medskip
+  Inline math: \( f(x)=x^2 \), bold vector \( \bm{v}\in\mathbb{R}^3 \).
+
+  \medskip
+  Displayed integral:
+  \[
+    \int_0^1 x^m\,dx = \frac{1}{m+1},\quad m> -1.
+  \]
+\end{frame}
+
+\subsection{Blocks}
+
+\begin{frame}{Blocks}
+  \begin{block}{Strong statement}
+    Clean block environments; titles use TU blue with white text.
+  \end{block}
+  \begin{exampleblock}{Example}
+    Use white titles with blue text for helpful tips.
+  \end{exampleblock}
+\end{frame}
+
+\section{Algorithms}
+\subsection{Pseudocode}
+\begin{frame}{Pseudocode}
+  \begin{algorithm}[H]
+    \caption{Greedy Selection (toy)}
+    \begin{algorithmic}[1]
+      \Require set $S$, score $w(\cdot)$, budget $k$
+      \Ensure  subset $A$
+      \State $A \gets \emptyset$
+      \While{$|A| < k$}
+        \State $x \gets \arg\max_{y\in S\setminus A} w(y)$
+        \State $A \gets A \cup \{x\}$
+      \EndWhile
+      \State \Return $A$
+    \end{algorithmic}
+  \end{algorithm}
+\end{frame}
+
+\section{Tables \& Figures}
+\subsection{Table}
+\begin{frame}{Table}
+  \begin{table}
+    \centering
+    \caption{Tiny example with \texttt{booktabs}.}
+    \begin{tabular}{@{}lS[table-format=1.2]S[table-format=2.1]@{}}
+      \toprule
+      Method & {Accuracy} & {Time (s)} \\
+      \midrule
+      A & 0.92 & 12.3 \\
+      B & 0.89 & 9.8 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\subsection{Figure}
+\begin{frame}{Figure}
+  \begin{figure}
+    \centering
+    % Put a sample figure at assets/example-graph.(pdf|png|jpg)
+    \includegraphics[width=.62\linewidth]{../assets/example-graph}
+    \caption{Example figure (use \texttt{example-graph})~\cite{clarke1964}.}
+  \end{figure}
+\end{frame}
+
+\section{Code}
+\begin{frame}[fragile]{Listings}
+\begin{lstlisting}[language=Python,caption={Simple Python snippet}]
+def f(x: float) -> float:
+    return x*x + 1.0
+
+print(f(2.0))
+\end{lstlisting}
+\end{frame}
+
+\section{References}
+\begin{frame}[allowframebreaks]{Bibliography}
+  \footnotesize
+  \begin{enumerate}
+    \item \fullcite{dantzig1951}
+    \item \fullcite{berge1963}
+    \item \fullcite{clarke1964}
+  \end{enumerate}
+\end{frame}
+
+\end{document}

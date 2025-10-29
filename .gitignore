@@ -1,0 +1,25 @@
+# LaTeX build
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.xdv
+*.vrb
+
+# Latexmk out dirs
+build/
+_output/
+
+# OS/editor junk
+.DS_Store
+.vscode/*
+!.vscode/settings.json
