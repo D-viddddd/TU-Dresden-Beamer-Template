@@ -1,6 +1,6 @@
 # TU-Dresden-Beamer-Template
 
-Clean, lightweight Beamer appearance inspired by TU Dresden’s current corporate design. The demo presentation shows a white canvas with TU blue accents, a compact footline, and a progress headline.
+Clean, lightweight Beamer appearance inspired by TU Dresden’s current corporate design. **This is an unofficial template** provided for personal and academic presentations; it is not affiliated with or endorsed by TU Dresden. The demo presentation shows a white canvas with TU blue accents, a compact footline, and a progress headline.
 
 ## Highlights
 - Single-file theme: `template/beamerthemeTUDneo.sty`
