@@ -19,6 +19,8 @@ pdflatex example/demo.tex && pdflatex example/demo.tex
 
 Requirements: TeX Live (or MiKTeX) with `latexmk`, `biblatex`, and XeLaTeX enabled. If you want SVG logo support you also need the `svg` package **and** Inkscape on your PATH.
 
+VS Code (LaTeX Workshop) users can just press `Cmd+S` on macOS or `Ctrl+S` on Windows: the extension triggers the bundled `latexmk` workflow automatically.
+
 ## Using the theme
 ```tex
 \documentclass{beamer}
