@@ -17,8 +17,9 @@ $bibtex    = $biber_command;
 $use_biber = 1;
 my $example_path  = $repo_root . '/example//';
 my $assets_path   = $repo_root . '/assets//';
+my $template_path = $repo_root . '/template//';
 my $bib_path      = $repo_root . '/ref//';
-my $texinputs_add = $example_path . ':' . $assets_path . ':';
+my $texinputs_add = $example_path . ':' . $assets_path . ':' . $template_path . ':';
 
 if (exists $ENV{'TEXINPUTS'} && length $ENV{'TEXINPUTS'}) {
   $ENV{'TEXINPUTS'} = $texinputs_add . $ENV{'TEXINPUTS'};

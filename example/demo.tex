@@ -8,6 +8,7 @@
 \usepackage{booktabs, array}
 \usepackage{siunitx}
 \usepackage{graphicx}
+\graphicspath{{../assets/}}
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{listings}
@@ -65,8 +66,8 @@
   \vspace{0.6cm}
   {\small \insertdate\par}
   \vspace{0.8cm}
-  % Place your SVG at assets/Logo_TU_Dresden_2025.svg (or PDF/PNG/JPG)
-  \TUDCenteredLogo[0.16\paperwidth]{../assets/Logo_TU_Dresden_2025}
+  % Place your SVG at assets/Logo_TU_Dresden_2025.(pdf|png|jpg|svg)
+  \TUDCenteredLogo[0.16\paperwidth]{Logo_TU_Dresden_2025}
 \end{frame}
 
 % ---------------- Outline ----------------
@@ -142,7 +143,7 @@
   \begin{figure}
     \centering
     % Put a sample figure at assets/example-graph.(pdf|png|jpg)
-    \includegraphics[width=.62\linewidth]{../assets/example-graph}
+    \includegraphics[width=.62\linewidth]{example-graph}
     \caption{Example figure (use \texttt{example-graph})~\cite{clarke1964}.}
   \end{figure}
 \end{frame}

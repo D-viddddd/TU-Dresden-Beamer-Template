@@ -1,0 +1,153 @@
+\ProvidesPackage{beamerthemeTUDneo}[2025/10/29 TU Dresden neo beamer theme]
+
+% Options
+\RequirePackage{pgfopts}
+\newif\ifTUDHeadProgress
+\TUDHeadProgresstrue
+\pgfkeys{/TUD/.is family, /TUD,
+  headprogress/.is if=TUDHeadProgress,
+  headprogress/.default = true,
+}
+\ProcessPgfOptions{/TUD}
+
+% Core
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{ifthen}
+\RequirePackage{iftex}
+\RequirePackage{etoolbox}
+
+\newif\ifTUDSVGavailable
+\ifdefined\includesvg
+  \TUDSVGavailabletrue
+\else
+  \TUDSVGavailablefalse
+\fi
+
+% Colors (TU Dresden Corporate Blue)
+\definecolor{TUDblue}{RGB}{0,101,189}  % #0065BD
+\definecolor{TUDgray}{RGB}{102,102,102}
+
+% Fonts: portable default (Open Sans Type1 via package)
+% Works with pdfLaTeX and XeLaTeX without system fonts.
+\RequirePackage[default]{opensans}
+
+% Beamer base
+\mode<presentation>
+\useinnertheme{rectangles}
+\useoutertheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+% Global color/structure
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{structure}{fg=TUDblue}
+\setbeamercolor{frametitle}{bg=TUDblue,fg=white}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+
+% Block styles (blue headers with white text)
+\setbeamercolor{block title}{bg=TUDblue,fg=white}
+\setbeamercolor{block body}{bg=white,fg=black}
+
+\setbeamercolor{exampleblock title}{bg=white,fg=TUDblue}
+\setbeamercolor{exampleblock body}{bg=white,fg=black}
+
+\setbeamercolor{alertblock title}{bg=TUDblue!70!black,fg=white}
+\setbeamercolor{alertblock body}{bg=white,fg=black}
+
+% Headline (subsection + progress)
+\setbeamercolor{headline}{bg=white,fg=black}
+\setbeamerfont{headline}{size=\scriptsize}
+
+% Helper: current scope text (subsection fallback to section)
+\makeatletter
+\newcommand{\TUDScopeText}{%
+  \ifx\insertsubsectionhead\@empty
+    \insertsectionhead
+  \else
+    \insertsubsectionhead
+  \fi
+}
+\makeatother
+
+% Helper: frames left = total - current
+\newcommand{\TUDFramesLeft}{\number\numexpr\inserttotalframenumber-\insertframenumber\relax}
+
+\setbeamertemplate{headline}{%
+  \ifTUDHeadProgress
+    \nointerlineskip
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.8ex,dp=1.0ex,leftskip=1em,rightskip=1em]{headline}
+      \usebeamerfont{headline}%
+      \TUDScopeText%
+      \hfill
+      \footnotesize Frame \insertframenumber/\inserttotalframenumber{} \, (\TUDFramesLeft{} left)
+    \end{beamercolorbox}%
+  \fi
+}
+
+% Footline (blue bar, white text; author-title | institute | n/N)
+\setbeamercolor{footline}{bg=TUDblue,fg=white}
+\setbeamerfont{footline}{size=\scriptsize}
+
+\setbeamertemplate{footline}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3ex,dp=1ex,leftskip=1em,rightskip=1em]{footline}%
+    \usebeamerfont{footline}%
+    \insertshortauthor{} \textendash{} \insertshorttitle%
+    \hfill
+    \insertshortinstitute{} \quad \textbullet\quad \insertframenumber/\inserttotalframenumber
+  \end{beamercolorbox}%
+}
+
+% Frametitle bar (solid blue)
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3.2ex,dp=1.2ex,leftskip=1em]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle%
+  \end{beamercolorbox}%
+}
+
+% --- Robust centered logo helper ---
+\makeatletter
+\newcommand{\TUDCenteredLogo}[2][0.18\paperwidth]{%
+  \begingroup
+    \def\TUD@logoWidth{#1}%
+    \def\TUD@logoBase{#2}%
+    \IfFileExists{\TUD@logoBase}{%
+      \includegraphics[width=\TUD@logoWidth]{\TUD@logoBase}%
+    }{%
+      \def\TUD@logoExt{}%
+      \IfFileExists{\TUD@logoBase.pdf}{\def\TUD@logoExt{pdf}}{}%
+      \ifx\TUD@logoExt\@empty
+        \IfFileExists{\TUD@logoBase.png}{\def\TUD@logoExt{png}}{}%
+      \fi
+      \ifx\TUD@logoExt\@empty
+        \IfFileExists{\TUD@logoBase.jpg}{\def\TUD@logoExt{jpg}}{}%
+      \fi
+      \ifx\TUD@logoExt\@empty
+        \IfFileExists{\TUD@logoBase.jpeg}{\def\TUD@logoExt{jpeg}}{}%
+      \fi
+      \ifx\TUD@logoExt\@empty
+        \IfFileExists{\TUD@logoBase.svg}{\def\TUD@logoExt{svg}}{}%
+        \ifx\TUD@logoExt\@empty
+          \PackageWarning{beamerthemeTUDneo}{Logo file `#2' not found; skipping logo}%
+        \else
+          \ifTUDSVGavailable
+            \includesvg[width=\TUD@logoWidth]{\TUD@logoBase}%
+          \else
+            \PackageWarning{beamerthemeTUDneo}{SVG logo requested but package `svg' unavailable; skipping logo}%
+          \fi
+        \fi
+      \else
+        \includegraphics[width=\TUD@logoWidth]{\TUD@logoBase.\TUD@logoExt}%
+      \fi
+    }%
+  \endgroup
+}
+\makeatother
+
+% Captions: numbered + compact
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{bibliography item}[text]
+
+% End
+\mode<all>
