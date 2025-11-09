@@ -1,5 +1,12 @@
 \documentclass[aspectratio=169, xcolor=table]{beamer}
 
+% Make LaTeX search the template directory (theme) and assets directory (logos)
+\makeatletter
+\providecommand*{\input@path}{}
+\g@addto@macro\input@path{{../template/}}
+\g@addto@macro\input@path{{../assets/}}
+\makeatother
+
 % Theme (header progress can be disabled: [headprogress=false])
 \usepackage[headprogress=true]{beamerthemeTUDneo}
 
@@ -67,7 +74,7 @@
   {\small \insertdate\par}
   \vspace{0.8cm}
   % Place your SVG at assets/Logo_TU_Dresden_2025.(pdf|png|jpg|svg)
-  \TUDCenteredLogo[0.16\paperwidth]{Logo_TU_Dresden_2025}
+  \TUDCenteredLogo[0.16\paperwidth]{Logo_TU_Dresden_2025.pdf}
 \end{frame}
 
 % ---------------- Outline ----------------

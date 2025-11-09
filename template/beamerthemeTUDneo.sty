@@ -1,3 +1,11 @@
+\makeatletter
+\edef\TUD@pkgname{\detokenize{beamerthemeTUDneo}}
+\edef\TUD@reqname{\detokenize{\@currname}}
+\ifx\TUD@reqname\TUD@pkgname
+  \let\@currpath\@empty
+\fi
+\makeatother
+
 \ProvidesPackage{beamerthemeTUDneo}[2025/10/29 TU Dresden neo beamer theme]
 
 % Options
