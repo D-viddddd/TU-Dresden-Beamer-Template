@@ -27,6 +27,7 @@
 \addbibresource{../ref/refs.bib}
 
 % Listings style (simple, neutral)
+% Listings style (simple, neutral)
 \lstset{
   basicstyle=\ttfamily\small,
   frame=single,
@@ -39,6 +40,17 @@
 
 \setlength{\leftmargini}{1.4em}
 \setlength{\leftmarginii}{1.2em}
+
+\AtBeginSection{
+  \begin{frame}[allowframebreaks]{Outline}
+    \tableofcontents[currentsection,hideothersubsections,sectionstyle=show/shaded]
+  \end{frame}
+}
+\AtBeginSubsection{
+  \begin{frame}[allowframebreaks]{Outline}
+    \tableofcontents[currentsection,currentsubsection,hideothersubsections,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+  \end{frame}
+}
 
 % Title info
 \title[TUD Official Demo]{TUD Official 2025 — Brillantblau Theme}
