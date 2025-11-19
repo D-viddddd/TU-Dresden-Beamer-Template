@@ -1,0 +1,352 @@
+\makeatletter
+\edef\TUD@pkgname{\detokenize{beamerthemeTUDofficial2025}}
+\edef\TUD@reqname{\detokenize{\@currname}}
+\ifx\TUD@reqname\TUD@pkgname
+  \let\@currpath\@empty
+\fi
+\makeatother
+
+\ProvidesPackage{beamerthemeTUDofficial2025}[2025/11/06 TU Dresden official 2025 beamer theme]
+
+% Options (match legacy behaviour for headline progress)
+\RequirePackage{pgfopts}
+\newif\ifTUDHeadProgress
+\TUDHeadProgresstrue
+\pgfkeys{/TUD/.is family, /TUD,
+  headprogress/.is if=TUDHeadProgress,
+  headprogress/.default = true,
+}
+\ProcessPgfOptions{/TUD}
+
+% Core packages
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{ifthen}
+\RequirePackage{iftex}
+\RequirePackage{etoolbox}
+
+\newif\ifTUDSVGavailable
+\ifdefined\includesvg
+  \TUDSVGavailabletrue
+\else
+  \TUDSVGavailablefalse
+\fi
+
+% Corporate color palette (subset from official guide)
+\definecolor{TUDbrillantblue}{HTML}{00008C}
+\definecolor{TUDdarkblue}{HTML}{001450}
+\definecolor{TUDgraphite}{HTML}{323F4B}
+\definecolor{TUDcoolgray}{HTML}{F1F3F5}
+\definecolor{TUDaccentmagenta}{HTML}{BC1589}
+\definecolor{TUDaccentyellow}{HTML}{FFC700}
+\definecolor{TUDaccentviolet}{HTML}{7369BE}
+
+% Fonts: Open Sans (portable Type1)
+\RequirePackage[default]{opensans}
+
+% --- Helpers ---------------------------------------------------------------
+\makeatletter
+\newcommand{\TUD@LogoBase}{Logo_TU_Dresden_2025}
+\newcommand{\TUD@CoverLogoBase}{tud_logo_white}
+\newcommand{\TUDSetLogo}[1]{\renewcommand{\TUD@LogoBase}{#1}}
+\newcommand{\TUDSetCoverLogo}[1]{\renewcommand{\TUD@CoverLogoBase}{#1}}
+
+\newcommand{\TUD@RenderLogo}[2]{%
+  \begingroup
+    \def\TUD@logoWidth{#1}%
+    \def\TUD@logoBase{#2}%
+    \IfFileExists{\TUD@logoBase}{%
+      \includegraphics[width=\TUD@logoWidth]{\TUD@logoBase}%
+    }{%
+      \def\TUD@logoExt{}%
+      \IfFileExists{\TUD@logoBase.pdf}{\def\TUD@logoExt{pdf}}{}%
+      \ifx\TUD@logoExt\@empty
+        \IfFileExists{\TUD@logoBase.png}{\def\TUD@logoExt{png}}{}%
+      \fi
+      \ifx\TUD@logoExt\@empty
+        \IfFileExists{\TUD@logoBase.jpg}{\def\TUD@logoExt{jpg}}{}%
+      \fi
+      \ifx\TUD@logoExt\@empty
+        \IfFileExists{\TUD@logoBase.jpeg}{\def\TUD@logoExt{jpeg}}{}%
+      \fi
+      \ifx\TUD@logoExt\@empty
+        \IfFileExists{\TUD@logoBase.svg}{\def\TUD@logoExt{svg}}{}%
+        \ifx\TUD@logoExt\@empty
+          \PackageWarning{beamerthemeTUDofficial2025}{Logo file `\TUD@LogoBase' not found; skipping logo}%
+        \else
+          \ifTUDSVGavailable
+            \includesvg[width=\TUD@logoWidth]{\TUD@logoBase}%
+          \else
+            \PackageWarning{beamerthemeTUDofficial2025}{SVG logo requested but package `svg' unavailable; skipping logo}%
+          \fi
+        \fi
+      \else
+        \includegraphics[width=\TUD@logoWidth]{\TUD@logoBase.\TUD@logoExt}%
+      \fi
+    }%
+  \endgroup
+}
+\newcommand{\TUDIncludeLogo}[1][0.18\paperwidth]{%
+  \TUD@RenderLogo{#1}{\TUD@LogoBase}%
+}
+\newcommand{\TUDIncludeLogoFile}[2][0.18\paperwidth]{%
+  \TUD@RenderLogo{#1}{#2}%
+}
+\makeatother
+
+\newcommand{\TUDSpeakerText}{}
+\newcommand{\TUDSetSpeaker}[1]{\renewcommand{\TUDSpeakerText}{#1}}
+\makeatletter
+\newcommand{\TUDIfSpeaker}[1]{%
+  \ifx\TUDSpeakerText\@empty
+  \else
+    #1%
+  \fi
+}
+\makeatother
+
+% --- Font size helpers (title/content only) -------------------------------
+\makeatletter
+\newcommand{\TUDTitleSize}{15pt}
+\newcommand{\TUDTitleBaseline}{12pt}
+\newcommand{\TUDContentSize}{12pt}
+\newcommand{\TUDContentBaseline}{14pt}
+
+\newcommand{\TUDApplyFontSetup}{%
+  \setbeamerfont{normal text}{size=\fontsize{\TUDContentSize}{\TUDContentBaseline}\selectfont}%
+  \setbeamerfont{itemize/enumerate body}{parent=normal text}%
+  \setbeamerfont{itemize/enumerate subbody}{parent=normal text}%
+\setbeamerfont{section in toc}{size=\fontsize{12pt}{15pt}\selectfont}%
+\setbeamerfont{subsection in toc}{size=\fontsize{11pt}{14pt}\selectfont}%
+  \setbeamerfont{math text}{parent=normal text}%
+  \setbeamerfont{math text displayed}{parent=normal text}%
+  \setbeamerfont{title}{size=\fontsize{\TUDTitleSize}{\TUDTitleBaseline}\selectfont,series=\bfseries}%
+  \setbeamerfont{frametitle}{size=\fontsize{\TUDTitleSize}{\TUDTitleBaseline}\selectfont,series=\bfseries}%
+  \setbeamerfont{subtitle}{size=\fontsize{\TUDContentSize}{\TUDContentBaseline}\selectfont}%
+  \setbeamerfont{author}{size=\fontsize{\TUDContentSize}{\TUDContentBaseline}\selectfont}%
+  \setbeamerfont{date}{size=\fontsize{\TUDContentSize}{\TUDContentBaseline}\selectfont}%
+}
+\newcommand{\TUDSetTitleFont}[2]{%
+  \renewcommand{\TUDTitleSize}{#1}%
+  \renewcommand{\TUDTitleBaseline}{#2}%
+  \TUDApplyFontSetup
+}
+\newcommand{\TUDSetContentFont}[2]{%
+  \renewcommand{\TUDContentSize}{#1}%
+  \renewcommand{\TUDContentBaseline}{#2}%
+  \TUDApplyFontSetup
+}
+\TUDApplyFontSetup
+\makeatother
+
+% Helper: fallback text when subtitle is empty
+\makeatletter
+\newcommand{\TUDIfSubtitle}[1]{%
+  \ifx\insertsubtitle\@empty
+  \else
+    #1%
+  \fi
+}
+\makeatother
+
+% --- Base Beamer setup -----------------------------------------------------
+\mode<presentation>
+\useinnertheme{rectangles}
+\useoutertheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamercolor{normal text}{fg=TUDgraphite,bg=white}
+\setbeamercolor{structure}{fg=TUDbrillantblue}
+\setbeamersize{text margin left=0.9cm,text margin right=0.9cm}
+
+\setbeamercolor{frametitle}{bg=white,fg=TUDdarkblue}
+\makeatletter
+\setbeamerfont{frametitle}{size=\fontsize{\TUDTitleSize}{\TUDTitleBaseline}\selectfont,series=\bfseries}
+\makeatother
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3.4ex,dp=1.2ex,leftskip=1.2em,rightskip=1.2em]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle%
+  \end{beamercolorbox}%
+  {\color{TUDcoolgray}\rule{\paperwidth}{0.4pt}}%
+}
+
+% Blocks (align with corporate palette)
+\setbeamercolor{block title}{bg=TUDbrillantblue,fg=white}
+\setbeamercolor{block body}{bg=white,fg=TUDgraphite}
+\setbeamerfont{block title}{parent=normal text,series=\bfseries}
+\setbeamerfont{block body}{parent=normal text}
+
+\setbeamercolor{exampleblock title}{bg=TUDcoolgray,fg=TUDdarkblue}
+\setbeamercolor{exampleblock body}{bg=white,fg=TUDgraphite}
+\setbeamerfont{exampleblock title}{parent=normal text,series=\bfseries}
+\setbeamerfont{exampleblock body}{parent=normal text}
+
+\setbeamercolor{alertblock title}{bg=TUDaccentmagenta,fg=white}
+\setbeamercolor{alertblock body}{bg=white,fg=TUDgraphite}
+\setbeamerfont{alertblock title}{parent=normal text,series=\bfseries}
+\setbeamerfont{alertblock body}{parent=normal text}
+
+\setbeamerfont{block title}{parent=normal text}
+\setbeamerfont{block body}{parent=normal text}
+\setbeamerfont{exampleblock title}{parent=normal text}
+\setbeamerfont{exampleblock body}{parent=normal text}
+\setbeamerfont{alertblock title}{parent=normal text}
+\setbeamerfont{alertblock body}{parent=normal text}
+
+% Headline (reuse progress indicator from earlier theme)
+\setbeamercolor{headline}{bg=white,fg=TUDgraphite}
+\setbeamerfont{headline}{size=\scriptsize}
+
+\makeatletter
+\newcommand{\TUDScopeText}{%
+  \ifx\insertsubsectionhead\@empty
+    \insertsectionhead
+  \else
+    \insertsubsectionhead
+  \fi
+}
+\makeatother
+
+\newcommand{\TUDFramesLeft}{\number\numexpr\inserttotalframenumber-\insertframenumber\relax}
+
+\setbeamertemplate{headline}{%
+  \ifTUDHeadProgress
+    \nointerlineskip
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.8ex,dp=1.0ex,leftskip=1em,rightskip=1em]{headline}
+      \usebeamerfont{headline}%
+      \TUDScopeText%
+      \hfill
+      \footnotesize Frame \insertframenumber/\inserttotalframenumber{} \, (\TUDFramesLeft{} left)
+    \end{beamercolorbox}%
+  \fi
+}
+
+% Footline (logo + title + speaker + slide no.)
+\setbeamercolor{footline}{bg=white,fg=TUDgraphite}
+\setbeamerfont{footline}{size=\fontsize{8pt}{10pt}\selectfont}
+
+\makeatletter
+\newcommand{\TUDFooterMark}{%
+  \raisebox{-0.1ex}{%
+    \includegraphics[height=2.8ex,trim=0 0 130 0,clip]{\TUD@LogoBase}%
+  }%
+  \hspace{0.3em}%
+  {\color{TUDbrillantblue}\textbf{TUD}}%
+}
+\makeatother
+
+\setbeamertemplate{footline}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3.8ex,dp=1.2ex,leftskip=0.85em,rightskip=0.85em]{footline}%
+    \TUDFooterMark
+    \hspace{0.9em}%
+    \usebeamerfont{footline}\insertshorttitle{}%
+    \TUDIfSpeaker{\ \textbullet\ \TUDSpeakerText}%
+    \hfill
+    \usebeamerfont{footline}\textcolor{TUDgraphite}{Slide~\insertframenumber}%
+  \end{beamercolorbox}%
+}
+
+% Caption + bibliography styles
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{bibliography item}[text]
+
+% --- Official cover frame helper ------------------------------------------
+\makeatletter
+\newcommand{\TUDOfficialTitleFrame}{%
+  \begingroup
+    \setbeamercolor{background canvas}{bg=TUDbrillantblue}%
+    \setbeamercolor{normal text}{fg=white,bg=TUDbrillantblue}%
+    \setbeamercolor{structure}{fg=white}%
+    \begin{frame}[plain]
+      \color{white}%
+      \raggedright
+      \TUDIncludeLogoFile[0.28\paperwidth]{\TUD@CoverLogoBase}\par
+      \vspace{1.3cm}
+      {\centering\usebeamerfont{title}\inserttitle\par}
+      \TUDIfSubtitle{%
+        \vspace{0.45cm}
+        {\centering\usebeamerfont{subtitle} \insertsubtitle\par}%
+      }
+      \vspace{0.4cm}
+      \TUDIfSpeaker{%
+        \begin{center}\usebeamerfont{author}\TUDSpeakerText\par\end{center}
+      }%
+      \begin{center}\usebeamerfont{author}\insertauthor\par\end{center}
+      \vfill
+      \begin{center}
+        {\usebeamerfont{date}\TUDCompletionTime\par}
+      \end{center}
+    \end{frame}
+    \setbeamercolor{background canvas}{bg=white}%
+    \setbeamercolor{normal text}{fg=TUDgraphite,bg=white}%
+\setbeamercolor{structure}{fg=TUDbrillantblue}%
+  \endgroup
+}
+\makeatother
+
+\newcommand{\TUDCompletionTime}{\insertdate}
+\newcommand{\TUDSetCompletionTime}[1]{\gdef\TUDCompletionTime{#1}}
+\newcommand{\completiontime}[1]{\TUDSetCompletionTime{#1}}
+
+\newlength{\TUDToCSectionSkip}
+\setlength{\TUDToCSectionSkip}{0.35em}
+\newlength{\TUDToCHiddenSectionSkip}
+\setlength{\TUDToCHiddenSectionSkip}{0.9em}
+
+\makeatletter
+\def\beamer@sectionintoc#1#2#3#4#5{%
+  \ifnum\c@tocdepth>0%
+  \ifnum#4=\beamer@showpartnumber%
+  {%
+  \beamer@saveanother%
+  \gdef\beamer@todo{}%
+  \beamer@slideinframe=#1\relax%
+  \expandafter\only\beamer@tocsections{\gdef\beamer@todo{%
+      \beamer@tempcount=#5\relax%
+      \advance\beamer@tempcount by\beamer@sectionadjust%
+      \ifnum\beamer@tempcount>0 
+        \ifnum\beamer@tempcount>\beamer@toclastsection
+          \def\inserttocsectionnumber{}%
+        \else
+          \edef\inserttocsectionnumber{\the\beamer@tempcount}%
+        \fi
+      \else
+        \def\inserttocsectionnumber{}%
+      \fi%
+      \def\inserttocsection{\hyperlink{Navigation#3}{#2}}%
+      \beamer@tocifnothide{\ifnum\c@section=#1\beamer@toc@cs\else\beamer@toc@os\fi}%
+      {%
+        \ifbeamer@pausesections\pause\fi%
+        \ifx\beamer@toc@ooss\beamer@hidetext
+          \addvspace{\TUDToCHiddenSectionSkip}%
+        \else
+          \addvspace{\TUDToCSectionSkip}%
+        \fi
+        {%
+          \hbox{\vbox{%
+              \def\beamer@breakhere{\\}%
+              \beamer@tocact{\ifnum\c@section=#1\beamer@toc@cs\else\beamer@toc@os\fi}{section in toc}}}%
+         \par%
+        }%
+      }%
+    }%
+  }%
+  \beamer@restoreanother%
+  }%
+  \beamer@todo%
+  \fi\fi%
+}
+\makeatother
+
+% Convenience command for agenda slide styling + bullets
+\setbeamercolor{section number projected}{bg=TUDbrillantblue,fg=white}
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamertemplate{subsection in toc}[square]
+\setbeamercolor{itemize item}{fg=TUDbrillantblue}
+\setbeamercolor{itemize subitem}{fg=TUDbrillantblue}
+\setbeamertemplate{itemize item}[square]
+\setbeamertemplate{itemize subitem}[square]
+
+% End
