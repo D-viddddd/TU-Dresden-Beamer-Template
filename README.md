@@ -4,7 +4,7 @@ Clean, lightweight Beamer appearance inspired by TU Dresden’s current corporat
 
 ## Highlights
 - Original lightweight theme: `template/beamerthemeTUDneo.sty`
-- New official 2025 layout: `template/beamerthemeTUDofficial2025.sty` with cover helper and TU-blue footline
+- Official 2025 layout: `template/beamerthemeTUDofficial2025.sty` with cover helper and selectable compact or spread footlines
 - Outline frame auto-breaks across slides with compact spacing that only expands when subsections exist
 - Cover date line configurable via `\completiontime{<text>}` plus centered title/subtitle typography
 - Progress indicator in the headline (toggle with `headprogress=false`)
@@ -15,7 +15,8 @@ Clean, lightweight Beamer appearance inspired by TU Dresden’s current corporat
 ```bash
 # Recommended builds (XeLaTeX + Biber)
 latexmk -xelatex example/demo.tex           # Lightweight neo theme demo
-latexmk -xelatex example/demo_official.tex  # Official TU 2025 theme demo
+latexmk -xelatex example/demo_official.tex         # Compact official footline
+latexmk -xelatex example/demo_official_spread.tex  # Spread official footline
 
 # Optional fallback
 pdflatex example/demo.tex && pdflatex example/demo.tex
@@ -47,12 +48,12 @@ VS Code (LaTeX Workshop) users can just press `Cmd+S` on macOS or `Ctrl+S` on Wi
 ### 2025 official slides template
 ```tex
 \documentclass[aspectratio=169]{beamer}
-\usepackage[headprogress=true]{beamerthemeTUDofficial2025}
+\usepackage[headprogress=true,footline=compact]{beamerthemeTUDofficial2025}
 
-\title{Methods in Transport Policy}
-\subtitle{Task Part A — Consumer Surplus}
-\author[group04]{Sihao Wei \\ Farid Gadirov \\ Aysel Aliyeva \\ Franco Perez Saavedra San Roman}
-\TUDSetSpeaker{group04} % footline + cover, default already "group04"
+\title[Short Presentation Title]{Full Presentation Title}
+\subtitle{Optional Subtitle}
+\author[Presentation Team]{Author One \\ Author Two \\ Author Three}
+\TUDSetSpeaker{Author One} % current speaker; used only in the footline
 
 \begin{document}
 
@@ -65,7 +66,28 @@ VS Code (LaTeX Workshop) users can just press `Cmd+S` on macOS or `Ctrl+S` on Wi
 
 \end{document}
 ```
-`beamerthemeTUDofficial2025` mirrors the official corporate PPT (Brillantblau (#00008C) cover, white content canvas, TU footer). By default the speaker badge in the footer is `group04`; override it with `\TUDSetSpeaker{<name>}`. The title frame prints the footline speaker on the first line (e.g., “group04”) and the full author list right below, so populate `\author[group04]{Name A \\ Name B}` to show the two-line structure requested by the design guide. Use `\completiontime{<text>}` once before `\begin{document}` to override the cover’s date line (falls back to `\insertdate` if omitted).
+`beamerthemeTUDofficial2025` mirrors the official corporate PPT (Brillantblau (#00008C) cover, white content canvas, TU footer). Select `footline=compact` for `TUD • short title • current speaker • Slide N` in one group, or `footline=spread` to keep the title and speaker on the left while aligning `Slide N` at the right edge. The optional argument of `\title`, such as `\title[Short Presentation Title]{Full Presentation Title}`, supplies the footer title. Keep the complete list of contributors in `\author{...}` for the cover and PDF metadata, and use `\TUDSetSpeaker{<name>}` only for the person presenting the current slides. This separation prevents a long author list from overflowing the footline. If no speaker is set, the speaker field and its preceding separator are omitted. Use `\completiontime{<text>}` before `\begin{document}` to override the cover’s date line (falls back to `\insertdate` if omitted).
+
+For a presentation split across multiple files, set the speaker inside each file before its frames. This makes the active speaker explicit without changing the shared author list:
+
+```tex
+% main.tex
+\author{Author One \\ Author Two \\ Author Three}
+\input{part-one}
+\input{part-two}
+
+% part-one.tex
+\TUDSetSpeaker{Author One}
+\begin{frame}{First Part}
+  % ...
+\end{frame}
+
+% part-two.tex
+\TUDSetSpeaker{Author Two}
+\begin{frame}{Second Part}
+  % ...
+\end{frame}
+```
 
 Place logos and other assets in `assets/`. The default latexmk configuration (`.latexmkrc`) extends `TEXINPUTS`/`XDVIPDFMXINPUTS`, so both XeLaTeX and the PDF driver can find those files no matter where the build directory lives. It also adds the root `ref/` directory to `BIBINPUTS`, so `\addbibresource{../ref/refs.bib}` works from inside `example/`.
 
@@ -75,7 +97,8 @@ TU-Dresden-Beamer-Template/
 ├─ assets/                      # Logos, sample graphics
 ├─ example/
 │  ├─ demo.tex                  # Showcases the lightweight theme
-│  └─ demo_official.tex         # Official 2025 theme demo (same content, TU styling)
+│  ├─ demo_official.tex         # Official 2025 theme, compact footline
+│  └─ demo_official_spread.tex  # Same official demo, spread footline
 ├─ template/
 │  ├─ beamerthemeTUDneo.sty             # Lightweight theme
 │  └─ beamerthemeTUDofficial2025.sty    # Official TU blue template

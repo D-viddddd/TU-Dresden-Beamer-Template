@@ -7,8 +7,12 @@
 \g@addto@macro\input@path{{../assets/}}
 \makeatother
 
-% Official TU Dresden 2025 theme
-\usepackage[headprogress=true]{beamerthemeTUDofficial2025}
+% Official TU Dresden 2025 theme (compact by default; wrapper can select spread)
+\ifdefined\TUDDemoSpreadFootline
+  \usepackage[headprogress=true,footline=spread]{beamerthemeTUDofficial2025}
+\else
+  \usepackage[headprogress=true,footline=compact]{beamerthemeTUDofficial2025}
+\fi
 
 % Math, tables, figures, code, algorithms
 \usepackage{amsmath, amssymb, mathtools, bm}
@@ -53,10 +57,10 @@
 }
 
 % Title info
-\title[TUD Official Demo]{TUD Official 2025 — Brillantblau Theme}
+\title[Official Theme Demo]{TUD Official 2025 — Brillantblau Theme}
 \subtitle{Clean footline, geometric accent}
-\author[Sihao Wei]{Sihao Wei}
-\TUDSetSpeaker{Group A / member}
+\author[Presentation Team]{Author One \\ Author Two}
+\TUDSetSpeaker{Author One}
 \institute[Faculty of Transportation and Traffic Sciences]{Faculty of Transportation and Traffic Sciences}
 \date{\today}
 \completiontime{Finished \today}

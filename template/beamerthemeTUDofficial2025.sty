@@ -6,15 +6,21 @@
 \fi
 \makeatother
 
-\ProvidesPackage{beamerthemeTUDofficial2025}[2025/11/06 TU Dresden official 2025 beamer theme]
+\ProvidesPackage{beamerthemeTUDofficial2025}[2026/07/14 TU Dresden official 2025 beamer theme]
 
 % Options (match legacy behaviour for headline progress)
 \RequirePackage{pgfopts}
 \newif\ifTUDHeadProgress
 \TUDHeadProgresstrue
+\newif\ifTUDCompactFootline
+\TUDCompactFootlinetrue
 \pgfkeys{/TUD/.is family, /TUD,
   headprogress/.is if=TUDHeadProgress,
   headprogress/.default = true,
+  footline/.is choice,
+  footline/compact/.code = \TUDCompactFootlinetrue,
+  footline/spread/.code = \TUDCompactFootlinefalse,
+  footline/.default = compact,
 }
 \ProcessPgfOptions{/TUD}
 
@@ -222,7 +228,7 @@
   \fi
 }
 
-% Footline (logo + title + speaker + slide no.)
+% Footlines: compact keeps all fields together; spread pushes the slide number right.
 \setbeamercolor{footline}{bg=white,fg=TUDgraphite}
 \setbeamerfont{footline}{size=\fontsize{8pt}{10pt}\selectfont}
 
@@ -236,17 +242,35 @@
 }
 \makeatother
 
-\setbeamertemplate{footline}{%
+\defbeamertemplate{footline}{compact}{%
   \nointerlineskip
   \begin{beamercolorbox}[wd=\paperwidth,ht=3.8ex,dp=1.2ex,leftskip=0.85em,rightskip=0.85em]{footline}%
     \TUDFooterMark
-    \hspace{0.9em}%
+    \ \textbullet\ %
+    \usebeamerfont{footline}\insertshorttitle{}%
+    \TUDIfSpeaker{\ \textbullet\ \TUDSpeakerText}%
+    \ \textbullet\ %
+    \usebeamerfont{footline}\textcolor{TUDgraphite}{Slide~\insertframenumber}%
+  \end{beamercolorbox}%
+}
+
+\defbeamertemplate{footline}{spread}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3.8ex,dp=1.2ex,leftskip=0.85em,rightskip=0.85em]{footline}%
+    \TUDFooterMark
+    \ \textbullet\ %
     \usebeamerfont{footline}\insertshorttitle{}%
     \TUDIfSpeaker{\ \textbullet\ \TUDSpeakerText}%
     \hfill
     \usebeamerfont{footline}\textcolor{TUDgraphite}{Slide~\insertframenumber}%
   \end{beamercolorbox}%
 }
+
+\ifTUDCompactFootline
+  \setbeamertemplate{footline}[compact]
+\else
+  \setbeamertemplate{footline}[spread]
+\fi
 
 % Caption + bibliography styles
 \setbeamertemplate{caption}[numbered]
@@ -270,9 +294,6 @@
         {\centering\usebeamerfont{subtitle} \insertsubtitle\par}%
       }
       \vspace{0.4cm}
-      \TUDIfSpeaker{%
-        \begin{center}\usebeamerfont{author}\TUDSpeakerText\par\end{center}
-      }%
       \begin{center}\usebeamerfont{author}\insertauthor\par\end{center}
       \vfill
       \begin{center}
