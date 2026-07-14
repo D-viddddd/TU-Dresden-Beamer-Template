@@ -89,7 +89,7 @@ For a presentation split across multiple files, set the speaker inside each file
 \end{frame}
 ```
 
-Place logos and other assets in `assets/`. The default latexmk configuration (`.latexmkrc`) extends `TEXINPUTS`/`XDVIPDFMXINPUTS`, so both XeLaTeX and the PDF driver can find those files no matter where the build directory lives. It also adds the root `ref/` directory to `BIBINPUTS`, so `\addbibresource{../ref/refs.bib}` works from inside `example/`.
+Place logos and other assets in `assets/`. The default latexmk configuration (`.latexmkrc`) writes each PDF next to its source file and extends `TEXINPUTS`/`XDVIPDFMXINPUTS` so XeLaTeX and the PDF driver can find the shared files. It also adds the root `ref/` directory to `BIBINPUTS`, so `\addbibresource{../ref/refs.bib}` works from inside `example/`.
 
 ## Project layout
 ```
